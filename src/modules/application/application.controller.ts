@@ -26,7 +26,9 @@ import { RolesGuard } from '../../guard/roles.guard';
 import { Roles } from '../../decorator/roles.decorator';
 import { LoggingInterceptor } from '../../interceptor/logging.interceptor';
 import { User } from '../../decorator/user.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Application 接口')
 @Controller('application')
 @Roles('admin')
 // @Controller({ host: 'admin.example.com' })
@@ -55,7 +57,7 @@ export class ApplicationController {
   }
 
   @Get('/user')
-  @UseGuards(RolesGuard)
+  // @UseGuards(RolesGuard)
   user(@User('name') name: string) {
     return name;
   }
