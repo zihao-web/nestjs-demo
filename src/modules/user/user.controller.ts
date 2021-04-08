@@ -1,7 +1,9 @@
 import {
   Get,
+  Put,
   Post,
   Body,
+  Query,
   Param,
   Delete,
   Controller,
@@ -9,8 +11,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUser } from './dto/create-user.dto';
-import { ValidationPipe } from '../../pipes/validation.pipe';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { LoggingInterceptor } from '../../interceptor/logging.interceptor';
 import { User } from '../../decorator/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
@@ -18,28 +20,37 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('用户接口')
 @Controller('user')
 export class UserController {
-  constructor(private applicationService: UserService) {
+  constructor(private userService: UserService) {
     // -
   }
   @Get('/list')
   @UseInterceptors(LoggingInterceptor)
   list() {
-    return this.applicationService.list();
+    const a = [['name', 'desc']];
+    console.log(a);
+    return this.userService.list();
   }
 
-  @Get('/user')
-  user(@User('name') name: string) {
-    return name;
+  @Get(':id')
+  user(@Param('id') id: number) {
+    return this.userService.findOne(id);
   }
 
   @Post('/create')
-  create(@Body(new ValidationPipe()) data: CreateUser) {
-    console.log(data);
-    return this.applicationService.create(data);
+  async create(@Body() data: CreateUserDto) {
+    return await this.userService.create(data);
+  }
+
+  @Put('/update')
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() data: UpdateUserDto,
+  ) {
+    return await this.userService.update(id, data);
   }
 
   @Delete('/delete/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
-    return this.applicationService.delete(id);
+    return this.userService.delete(id);
   }
 }

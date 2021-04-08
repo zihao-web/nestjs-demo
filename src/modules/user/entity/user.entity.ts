@@ -6,30 +6,32 @@ import {
   BeforeCreate,
   BeforeValidate,
 } from 'sequelize-typescript';
+import * as moment from 'moment';
 
 @Table({
-  tableName: 'users',
   comment: '',
   timestamps: false,
+  tableName: 'users',
+  freezeTableName: true, // 保持表名，不需要加复数形式
 })
-export class UserModel extends Model<UserModel> {
-  @BeforeValidate
-  public static validateData(app: UserModel, options: any) {
-    if (!options.transaction) throw new Error('Missing transaction.');
-    if (!app.name) throw new Error('创建应用的name不可为空');
-  }
+export class UserModel extends Model {
+  // @BeforeValidate
+  // public static validateData(app: UserModel, options: any) {
+  //   if (!options.transaction) throw new Error('Missing transaction.');
+  //   if (!app.name) throw new Error('创建应用的name不可为空');
+  // }
 
-  @BeforeCreate
-  public static async hashPassword(app: UserModel, options: any) {
-    if (!options.transaction) throw new Error('Missing transaction.');
-  }
+  // @BeforeCreate
+  // public static async hashPassword(app: UserModel, options: any) {
+  //   if (!options.transaction) throw new Error('Missing transaction.');
+  // }
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: false,
-    comment: '应用英文ID，保持唯一',
+    autoIncrement: true,
+    comment: '用户ID',
     field: 'id',
   })
   public id: string;
@@ -57,21 +59,30 @@ export class UserModel extends Model<UserModel> {
     field: 'email',
   })
   email: string;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    defaultValue: null,
+    field: 'created_at',
+    get() {
+      return moment(this.getDataValue('createdAt')).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
+    },
+  })
+  public createdAt: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    defaultValue: null,
+    field: 'updated_at',
+    get() {
+      return moment(this.getDataValue('updatedAt')).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
+    },
+  })
+  public updatedAt: Date;
 }
-
-// import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-
-// @Entity()
-// export class UserModel {
-//   @PrimaryGeneratedColumn()
-//   id: number;
-
-//   @Column()
-//   name: string;
-
-//   @Column()
-//   age: number;
-
-//   @Column()
-//   email: string;
-// }

@@ -4,12 +4,11 @@ import { AppService } from './app.service';
 import { ApplicationModule } from './modules/application/application.module';
 import { UserModule } from './modules/user/user.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-import { UserMiddleware } from './middleware/user.middleware';
+// import { UserMiddleware } from './middleware/user.middleware';
 // import { logger } from './middleware/functional.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { SequelizeModule } from '@nestjs/sequelize';
-// import { Connection } from 'typeorm';
 
 @Module({
   imports: [
@@ -25,7 +24,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       autoLoadModels: true,
       synchronize: true,
       sync: {
-        force: true,
+        force: false,
       },
     }),
     ApplicationModule,
@@ -42,10 +41,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware, UserMiddleware)
-      .exclude('application/test')
-      .forRoutes('*');
+    consumer.apply(LoggerMiddleware).exclude('application/test').forRoutes('*');
     // consumer.apply(logger).forRoutes('*');
   }
 }
