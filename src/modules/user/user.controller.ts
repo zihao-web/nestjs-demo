@@ -8,40 +8,35 @@ import {
   Delete,
   Controller,
   ParseIntPipe,
-  UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
+import { User } from './entity/user.entity';
+import { ListUserDto } from './dto/list-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { LoggingInterceptor } from '../../interceptor/logging.interceptor';
-import { User } from '../../decorator/user.decorator';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('用户接口')
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {
-    // -
-  }
-  @Get('/list')
-  @UseInterceptors(LoggingInterceptor)
-  list() {
-    const a = [['name', 'desc']];
-    console.log(a);
-    return this.userService.list();
+  constructor(private userService: UserService) {}
+
+  @Get('list')
+  async list(@Query() query: ListUserDto): Promise<User[]> {
+    return this.userService.list(query);
   }
 
   @Get(':id')
-  user(@Param('id') id: number) {
+  async user(@Param('id') id: number) {
     return this.userService.findOne(id);
   }
 
-  @Post('/create')
+  @Post('create')
   async create(@Body() data: CreateUserDto) {
-    return await this.userService.create(data);
+    return this.userService.create(data);
   }
 
-  @Put('/update')
+  @Put('update')
   async update(
     @Query('id', ParseIntPipe) id: number,
     @Body() data: UpdateUserDto,
@@ -49,8 +44,8 @@ export class UserController {
     return await this.userService.update(id, data);
   }
 
-  @Delete('/delete/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  @Delete('delete/:id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);
   }
 }

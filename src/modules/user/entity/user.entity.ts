@@ -14,7 +14,7 @@ import * as moment from 'moment';
   tableName: 'users',
   freezeTableName: true, // 保持表名，不需要加复数形式
 })
-export class UserModel extends Model {
+export class User extends Model {
   // @BeforeValidate
   // public static validateData(app: UserModel, options: any) {
   //   if (!options.transaction) throw new Error('Missing transaction.');

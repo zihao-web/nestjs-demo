@@ -1,23 +1,36 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { ListUserDto } from './dto/list-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserModel } from './entity/user.entity';
+import { User } from './entity/user.entity';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
+import { Filterable, FindOptions, Op } from 'sequelize';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(UserModel)
-    private userModel: typeof UserModel,
+    @InjectModel(User)
+    private readonly userRepository: typeof User,
   ) {}
 
-  async list(): Promise<UserModel[]> {
-    return await this.userModel.findAll();
+  async list(query: ListUserDto): Promise<User[]> {
+    const { keyword, pageNum, pageSize } = query;
+    const userFilterable: Filterable<User> = {};
+    if (query.keyword) {
+      userFilterable.where[Op.or] = [{ name: { [Op.like]: `%${keyword}%` } }];
+    }
+    const userFindOptions: FindOptions<User> = {
+      ...userFilterable,
+    };
+    if (pageNum && pageSize) {
+      userFindOptions.limit = pageSize;
+      userFindOptions.offset = pageSize * (pageNum - 1);
+    }
+    return await this.userRepository.findAll(userFindOptions);
   }
 
-  async findOne(id: number): Promise<UserModel> {
-    const user = await this.userModel.findOne({
+  async findOne(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({
       where: { id },
     });
     if (!user) {
@@ -26,21 +39,21 @@ export class UserService {
     return user;
   }
 
-  async create(data: CreateUserDto): Promise<UserModel> {
-    return await this.userModel.create({
+  async create(data: CreateUserDto): Promise<User> {
+    return await this.userRepository.create({
       ...data,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
   }
 
-  async update(id: number, data: UpdateUserDto): Promise<UserModel> {
+  async update(id: number, data: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
     return await user.update(data);
   }
 
   async delete(id: number): Promise<void> {
-    await this.userModel.destroy({
+    await this.userRepository.destroy({
       where: { id },
     });
   }
