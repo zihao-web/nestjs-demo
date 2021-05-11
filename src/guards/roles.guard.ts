@@ -13,19 +13,13 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
-    // if (!roles) {
-    //   throw new HttpException('this is error message', HttpStatus.FORBIDDEN);
-    // }
-    console.log(roles);
-    const request = context.switchToHttp().getRequest();
-    const user = request.query.user;
-    if (user === 'admin') {
+    if (!roles || !roles.length) return true;
+    const { headers } = context.switchToHttp().getRequest();
+    const headerRoles: string[] = headers.roles ? headers.roles.split(',') : [];
+    if (roles.some((role) => headerRoles.includes(role))) {
       return true;
     } else {
-      throw new HttpException(
-        `Roles error message. user: ${user}`,
-        HttpStatus.FORBIDDEN,
-      );
+      throw new HttpException('很抱歉，您没有权限。', HttpStatus.FORBIDDEN);
     }
   }
 }

@@ -17,7 +17,9 @@ export class UserService {
     const { keyword, pageNum, pageSize } = query;
     const userFilterable: Filterable<User> = {};
     if (query.keyword) {
-      userFilterable.where[Op.or] = [{ name: { [Op.like]: `%${keyword}%` } }];
+      userFilterable.where = {
+        name: { [Op.like]: `%${keyword}%` },
+      };
     }
     const userFindOptions: FindOptions<User> = {
       ...userFilterable,

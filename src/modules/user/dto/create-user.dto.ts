@@ -1,18 +1,22 @@
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @IsString()
   @ApiProperty({
-    enum: ['王五', '赵六', '孙七', '刘八', '毛九'],
+    default: '',
   })
   name: string;
 
   @IsInt()
-  @ApiProperty()
+  @ApiProperty({
+    default: '',
+  })
   age: number;
 
-  @IsString()
-  @ApiProperty()
-  email: number;
+  @IsEmail()
+  @ApiProperty({
+    default: '',
+  })
+  email: string;
 }

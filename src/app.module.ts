@@ -7,7 +7,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 // import { UserMiddleware } from './middleware/user.middleware';
 // import { logger } from './middleware/functional.middleware';
 import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({
