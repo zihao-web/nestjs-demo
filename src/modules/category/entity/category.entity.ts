@@ -1,37 +1,19 @@
-import {
-  Table,
-  Model,
-  Column,
-  DataType,
-  BeforeCreate,
-  BeforeValidate,
-} from 'sequelize-typescript';
+import { Table, Model, Column, DataType } from 'sequelize-typescript';
 import * as moment from 'moment';
 
 @Table({
-  comment: '',
+  comment: '分类表',
   timestamps: false,
-  tableName: 'users',
+  tableName: 'category',
   freezeTableName: true, // 保持表名，不需要加复数形式
 })
-export class User extends Model {
-  // @BeforeValidate
-  // public static validateData(app: UserModel, options: any) {
-  //   if (!options.transaction) throw new Error('Missing transaction.');
-  //   if (!app.name) throw new Error('创建应用的name不可为空');
-  // }
-
-  // @BeforeCreate
-  // public static async hashPassword(app: UserModel, options: any) {
-  //   if (!options.transaction) throw new Error('Missing transaction.');
-  // }
-
+export class Category extends Model {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
-    comment: '用户ID',
+    comment: '分类ID',
     field: 'id',
   })
   public id: string;
@@ -39,26 +21,24 @@ export class User extends Model {
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
-    comment: '用户名',
+    comment: '分类名称',
     field: 'name',
   })
   public name: string;
 
   @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-    comment: '用户年龄',
-    field: 'age',
+    type: DataType.STRING(255),
+    allowNull: true,
+    field: 'created_by',
   })
-  public age: number;
+  public createdBy: string;
 
   @Column({
     type: DataType.STRING(255),
     allowNull: true,
-    comment: '用户邮箱',
-    field: 'email',
+    field: 'update_by',
   })
-  public email: string;
+  public updateBy: string;
 
   @Column({
     type: DataType.DATE,

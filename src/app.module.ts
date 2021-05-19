@@ -9,6 +9,10 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { CategoryModule } from './modules/category/category.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
+import databaseConfig from './config/database.config';
 
 @Module({
   imports: [
@@ -27,8 +31,14 @@ import { SequelizeModule } from '@nestjs/sequelize';
         force: false,
       },
     }),
+    ConfigModule.forRoot({
+      isGlobal: true, // 配置全局访问
+      cache: true, // 缓存环境变量
+      load: [configuration, databaseConfig],
+    }),
     ApplicationModule,
     UserModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [
