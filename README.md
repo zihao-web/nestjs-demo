@@ -46,6 +46,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# 生成默认的模块配置
+nest generate resource modules/page
 ```
 
 ## Test

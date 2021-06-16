@@ -1,12 +1,5 @@
-import {
-  Table,
-  Model,
-  Column,
-  DataType,
-  BeforeCreate,
-  BeforeValidate,
-} from 'sequelize-typescript';
-import * as moment from 'moment';
+import { Table, Model, Column, DataType, BeforeCreate, BeforeValidate } from 'sequelize-typescript';
+import moment from 'moment';
 
 @Table({
   comment: '',
@@ -66,9 +59,7 @@ export class User extends Model {
     defaultValue: null,
     field: 'created_at',
     get() {
-      return moment(this.getDataValue('createdAt')).format(
-        'YYYY-MM-DD HH:mm:ss',
-      );
+      return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss');
     },
   })
   public createdAt: Date;
@@ -79,9 +70,7 @@ export class User extends Model {
     defaultValue: null,
     field: 'updated_at',
     get() {
-      return moment(this.getDataValue('updatedAt')).format(
-        'YYYY-MM-DD HH:mm:ss',
-      );
+      return moment(this.getDataValue('updatedAt')).format('YYYY-MM-DD HH:mm:ss');
     },
   })
   public updatedAt: Date;

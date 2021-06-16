@@ -1,15 +1,15 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { ListUserDto } from './dto/list-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entity/user.entity';
-import { InjectModel } from '@nestjs/sequelize';
 import { Filterable, FindOptions, Op } from 'sequelize';
+import { USER_REPOSITORY } from '../../lib/constant';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User)
+    @Inject(USER_REPOSITORY)
     private readonly userRepository: typeof User,
   ) {}
 

@@ -9,30 +9,30 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { CategoryModule } from './modules/category/category.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import databaseConfig from './config/database.config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { LoginModule } from './login/login.module';
+import { DatabaseModule } from './shared/database/database.module';
 
 @Module({
   imports: [
-    SequelizeModule.forRoot({
-      username: 'root',
-      password: '123456',
-      database: 'explame',
-      host: '127.0.0.1',
-      port: 3306,
-      dialect: 'mysql',
-      logging: console.log,
-      timezone: '+08:00',
-      autoLoadModels: true,
-      synchronize: true,
-      sync: {
-        force: false,
-      },
-    }),
+    // SequelizeModule.forRoot({
+    //   username: 'root',
+    //   password: '123456',
+    //   database: 'explame',
+    //   host: '127.0.0.1',
+    //   port: 3306,
+    //   dialect: 'mysql',
+    //   logging: console.log,
+    //   timezone: '+08:00',
+    //   autoLoadModels: true,
+    //   synchronize: true,
+    //   sync: {
+    //     force: false,
+    //   },
+    // }),
     ConfigModule.forRoot({
       isGlobal: true, // 配置全局访问
       cache: true, // 缓存环境变量
@@ -47,9 +47,9 @@ import { LoginModule } from './login/login.module';
       verboseMemoryLeak: false,
       ignoreErrors: false,
     }),
+    DatabaseModule,
     ApplicationModule,
     UserModule,
-    CategoryModule,
     LoginModule,
   ],
   controllers: [AppController],

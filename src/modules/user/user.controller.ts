@@ -29,17 +29,11 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 @ApiTags('用户接口')
 @Controller('user')
 export class UserController {
-  constructor(
-    private userService: UserService,
-    private eventEmitter: EventEmitter2,
-  ) {}
+  constructor(private userService: UserService, private eventEmitter: EventEmitter2) {}
 
   @Get('list')
   @UsePipes(QueryFormatPipe)
-  async list(
-    @Query() query: ListUserDto,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<User[]> {
+  async list(@Query() query: ListUserDto, @Res({ passthrough: true }) response: Response): Promise<User[]> {
     // 设置 cookie 返回给客户端
     response.cookie('key', 'value');
     return this.userService.list(query);
@@ -61,10 +55,7 @@ export class UserController {
   }
 
   @Put('update')
-  async update(
-    @Query('id', ParseIntPipe) id: number,
-    @Body() data: UpdateUserDto,
-  ) {
+  async update(@Query('id', ParseIntPipe) id: number, @Body() data: UpdateUserDto) {
     return await this.userService.update(id, data);
   }
 
