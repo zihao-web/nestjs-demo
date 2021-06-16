@@ -13,6 +13,8 @@ import { CategoryModule } from './modules/category/category.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import databaseConfig from './config/database.config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
@@ -36,9 +38,19 @@ import databaseConfig from './config/database.config';
       cache: true, // 缓存环境变量
       load: [configuration, databaseConfig],
     }),
+    EventEmitterModule.forRoot({
+      wildcard: false,
+      delimiter: '.',
+      newListener: false,
+      removeListener: false,
+      maxListeners: 10,
+      verboseMemoryLeak: false,
+      ignoreErrors: false,
+    }),
     ApplicationModule,
     UserModule,
     CategoryModule,
+    LoginModule,
   ],
   controllers: [AppController],
   providers: [
