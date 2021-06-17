@@ -8,35 +8,26 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 // import { logger } from './middleware/functional.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
-import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import databaseConfig from './config/database.config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { LoginModule } from './login/login.module';
 import { DatabaseModule } from './shared/database/database.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
-    // SequelizeModule.forRoot({
-    //   username: 'root',
-    //   password: '123456',
-    //   database: 'explame',
-    //   host: '127.0.0.1',
-    //   port: 3306,
-    //   dialect: 'mysql',
-    //   logging: console.log,
-    //   timezone: '+08:00',
-    //   autoLoadModels: true,
-    //   synchronize: true,
-    //   sync: {
-    //     force: false,
-    //   },
-    // }),
     ConfigModule.forRoot({
       isGlobal: true, // 配置全局访问
       cache: true, // 缓存环境变量
       load: [configuration, databaseConfig],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/api*'],
+      serveRoot: '/static',
     }),
     EventEmitterModule.forRoot({
       wildcard: false,

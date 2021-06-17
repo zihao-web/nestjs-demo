@@ -1,5 +1,5 @@
 import { Table, Model, Column, DataType, BeforeCreate, BeforeValidate } from 'sequelize-typescript';
-import moment from 'moment';
+import * as moment from 'moment';
 
 @Table({
   comment: '',

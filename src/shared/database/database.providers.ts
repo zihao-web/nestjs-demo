@@ -1,10 +1,11 @@
 import { Sequelize } from 'sequelize-typescript';
 import { User } from '../../modules/user/entity/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { SEQUELIZE } from '../../lib/constant';
 
 export const databaseProviders = [
   {
-    provide: 'SEQUELIZE',
+    provide: SEQUELIZE,
     useFactory: async (configService: ConfigService) => {
       const host = configService.get('DATABASE_HOST');
       const port = configService.get('DATABASE_PORT');

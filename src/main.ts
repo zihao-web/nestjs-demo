@@ -2,9 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 
-import * as csurf from 'csurf';
-import * as rateLimit from 'express-rate-limit';
+// import * as csurf from 'csurf';
 // import * as helmet from 'helmet';
+import * as rateLimit from 'express-rate-limit';
 import { crossOriginEmbedderPolicy } from 'helmet';
 
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -17,6 +17,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true, // 启动默认的 cors 配置
   });
+  app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
     .setTitle('个人学习用API')
@@ -34,7 +35,7 @@ async function bootstrap() {
       max: 100, // limit each IP to 100 requests per windowMs
     }),
   );
-  app.use(csurf()); // CSRF 保护，注册全局中间件
+  // app.use(csurf()); // CSRF 保护，注册全局中间件
   app.use(crossOriginEmbedderPolicy());
   app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter());
