@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, HttpModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApplicationModule } from './modules/application/application.module';
@@ -16,6 +16,7 @@ import { LoginModule } from './login/login.module';
 import { DatabaseModule } from './shared/database/database.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -38,10 +39,15 @@ import { join } from 'path';
       verboseMemoryLeak: false,
       ignoreErrors: false,
     }),
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
     DatabaseModule,
     ApplicationModule,
     UserModule,
     LoginModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [
